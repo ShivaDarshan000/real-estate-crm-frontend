@@ -68,24 +68,24 @@ function SiteVisits() {
   return (
     <div className="min-h-screen bg-gray-50">
       <Navbar />
-      <div className="p-6">
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-bold text-blue-800">Site Visits</h2>
+      <div className="p-4 sm:p-6">
+        <div className="flex justify-between items-center mb-4 sm:mb-6">
+          <h2 className="text-xl sm:text-2xl font-bold text-blue-800">Site Visits</h2>
           {role === "BUYER" && (
             <button
               onClick={() => setShowForm(!showForm)}
-              className="bg-blue-700 text-white px-4 py-2 rounded text-sm hover:bg-blue-800"
+              className="bg-blue-700 text-white px-3 sm:px-4 py-2 rounded text-sm hover:bg-blue-800"
             >
-              {showForm ? "Cancel" : "+ Schedule Visit"}
+              {showForm ? "Cancel" : "+ Schedule"}
             </button>
           )}
         </div>
 
         {/* Schedule Form */}
         {showForm && (
-          <div className="bg-white p-6 rounded-lg shadow mb-6">
+          <div className="bg-white p-4 sm:p-6 rounded-lg shadow mb-6">
             <h3 className="font-bold text-gray-700 mb-4">Schedule a Site Visit</h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               <select
                 className="border p-2 rounded text-sm"
                 value={form.propertyId}
@@ -109,76 +109,92 @@ function SiteVisits() {
                 onChange={(e) => setForm({ ...form, notes: e.target.value })}
               />
             </div>
-            <p className="text-xs text-gray-400 mt-2">
-              ℹ️ An agent will be automatically assigned to your visit.
-            </p>
+            <p className="text-xs text-gray-400 mt-2">ℹ️ An agent will be automatically assigned.</p>
             <button
               onClick={handleSchedule}
               disabled={submitting}
-              className="mt-4 bg-green-600 text-white px-6 py-2 rounded text-sm hover:bg-green-700"
+              className="mt-3 w-full sm:w-auto bg-green-600 text-white px-6 py-2 rounded text-sm hover:bg-green-700"
             >
               {submitting ? "Scheduling..." : "Confirm Visit"}
             </button>
           </div>
         )}
 
-        {/* Visits Table */}
         {loading ? (
           <p className="text-gray-500">Loading visits...</p>
         ) : visits.length === 0 ? (
           <div className="bg-white rounded-lg shadow p-10 text-center">
-            <p className="text-gray-400 text-lg">📅 No site visits found.</p>
-            {role === "BUYER" && (
-              <p className="text-gray-400 text-sm mt-2">Click "+ Schedule Visit" to book one.</p>
-            )}
+            <p className="text-4xl mb-3">📅</p>
+            <p className="text-gray-400 text-lg">No site visits found.</p>
+            {role === "BUYER" && <p className="text-gray-400 text-sm mt-2">Click "+ Schedule" to book one.</p>}
           </div>
         ) : (
-          <div className="bg-white rounded-lg shadow overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead className="bg-blue-800 text-white">
-                <tr>
-                  <th className="p-3 text-left">Property</th>
-                  <th className="p-3 text-left">Buyer</th>
-                  <th className="p-3 text-left">Agent</th>
-                  <th className="p-3 text-left">Visit Date</th>
-                  <th className="p-3 text-left">Notes</th>
-                  <th className="p-3 text-left">Status</th>
+          <>
+            {/* Mobile Card View */}
+            <div className="block sm:hidden space-y-4">
+              {visits.map((v) => (
+                <div key={v.id} className="bg-white rounded-lg shadow p-4 border border-gray-100">
+                  <div className="flex justify-between items-start mb-2">
+                    <p className="font-bold text-gray-800 text-sm">{v.property?.title || "—"}</p>
+                    <span className={`px-2 py-1 rounded-full text-xs font-semibold ${statusColor(v.status)}`}>{v.status}</span>
+                  </div>
+                  <p className="text-xs text-gray-500 mb-1">👤 Buyer: {v.buyer?.name || "—"}</p>
+                  <p className="text-xs text-gray-500 mb-1">🧑‍💼 Agent: {v.agent?.name || "—"}</p>
+                  <p className="text-xs text-gray-500 mb-1">📅 {new Date(v.visitDate).toLocaleString("en-IN")}</p>
+                  {v.notes && <p className="text-xs text-gray-500 mb-2">📝 {v.notes}</p>}
                   {["AGENT", "CEO", "ADMIN"].includes(role) && (
-                    <th className="p-3 text-left">Update</th>
+                    <select
+                      className="w-full border rounded p-2 text-xs mt-2"
+                      value={v.status}
+                      onChange={(e) => updateStatus(v.id, e.target.value)}
+                    >
+                      <option>SCHEDULED</option>
+                      <option>COMPLETED</option>
+                      <option>CANCELLED</option>
+                    </select>
                   )}
-                </tr>
-              </thead>
-              <tbody>
-                {visits.map((v) => (
-                  <tr key={v.id} className="border-b hover:bg-gray-50">
-                    <td className="p-3 font-semibold">{v.property?.title || "—"}</td>
-                    <td className="p-3">{v.buyer?.name || "—"}</td>
-                    <td className="p-3">{v.agent?.name || "—"}</td>
-                    <td className="p-3">{new Date(v.visitDate).toLocaleString("en-IN")}</td>
-                    <td className="p-3">{v.notes || "—"}</td>
-                    <td className="p-3">
-                      <span className={`px-2 py-1 rounded-full text-xs font-semibold ${statusColor(v.status)}`}>
-                        {v.status}
-                      </span>
-                    </td>
-                    {["AGENT", "CEO", "ADMIN"].includes(role) && (
-                      <td className="p-3">
-                        <select
-                          className="border rounded p-1 text-xs"
-                          value={v.status}
-                          onChange={(e) => updateStatus(v.id, e.target.value)}
-                        >
-                          <option>SCHEDULED</option>
-                          <option>COMPLETED</option>
-                          <option>CANCELLED</option>
-                        </select>
-                      </td>
-                    )}
+                </div>
+              ))}
+            </div>
+
+            {/* Desktop Table View */}
+            <div className="hidden sm:block bg-white rounded-lg shadow overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead className="bg-blue-800 text-white">
+                  <tr>
+                    <th className="p-3 text-left">Property</th>
+                    <th className="p-3 text-left">Buyer</th>
+                    <th className="p-3 text-left">Agent</th>
+                    <th className="p-3 text-left">Visit Date</th>
+                    <th className="p-3 text-left">Notes</th>
+                    <th className="p-3 text-left">Status</th>
+                    {["AGENT", "CEO", "ADMIN"].includes(role) && <th className="p-3 text-left">Update</th>}
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody>
+                  {visits.map((v) => (
+                    <tr key={v.id} className="border-b hover:bg-gray-50">
+                      <td className="p-3">{v.property?.title || "—"}</td>
+                      <td className="p-3">{v.buyer?.name || "—"}</td>
+                      <td className="p-3">{v.agent?.name || "—"}</td>
+                      <td className="p-3">{new Date(v.visitDate).toLocaleString("en-IN")}</td>
+                      <td className="p-3">{v.notes || "—"}</td>
+                      <td className="p-3"><span className={`px-2 py-1 rounded-full text-xs font-semibold ${statusColor(v.status)}`}>{v.status}</span></td>
+                      {["AGENT", "CEO", "ADMIN"].includes(role) && (
+                        <td className="p-3">
+                          <select className="border rounded p-1 text-xs" value={v.status} onChange={(e) => updateStatus(v.id, e.target.value)}>
+                            <option>SCHEDULED</option>
+                            <option>COMPLETED</option>
+                            <option>CANCELLED</option>
+                          </select>
+                        </td>
+                      )}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </>
         )}
       </div>
     </div>

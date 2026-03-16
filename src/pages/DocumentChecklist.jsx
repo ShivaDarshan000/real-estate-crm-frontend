@@ -66,9 +66,7 @@ function DocumentChecklist() {
   const handleApprove = async (docId) => {
     try {
       setProcessing({ ...processing, [docId]: true })
-      const res = await API.put(`/documents/approve/${docId}`, {
-        remarks: remarks[docId] || ""
-      })
+      const res = await API.put(`/documents/approve/${docId}`, { remarks: remarks[docId] || "" })
       alert(res.data.message)
       fetchData()
     } catch (err) {
@@ -85,9 +83,7 @@ function DocumentChecklist() {
     }
     try {
       setProcessing({ ...processing, [docId]: true })
-      await API.put(`/documents/reject/${docId}`, {
-        remarks: remarks[docId]
-      })
+      await API.put(`/documents/reject/${docId}`, { remarks: remarks[docId] })
       alert("Document rejected.")
       fetchData()
     } catch (err) {
@@ -114,14 +110,14 @@ function DocumentChecklist() {
   if (loading) return (
     <div className="min-h-screen bg-gray-50">
       <Navbar />
-      <div className="p-8 text-gray-500">Loading document checklist...</div>
+      <div className="p-4 text-gray-500">Loading document checklist...</div>
     </div>
   )
 
   return (
     <div className="min-h-screen bg-gray-50">
       <Navbar />
-      <div className="p-6 max-w-5xl mx-auto">
+      <div className="p-4 sm:p-6 max-w-5xl mx-auto">
 
         <button
           onClick={() => navigate(`/properties/${propertyId}`)}
@@ -131,31 +127,31 @@ function DocumentChecklist() {
         </button>
 
         {/* Header */}
-        <div className="bg-white rounded-lg shadow p-5 mb-6">
-          <h2 className="text-xl font-bold text-blue-800 mb-1">Document Checklist</h2>
+        <div className="bg-white rounded-lg shadow p-4 sm:p-5 mb-6">
+          <h2 className="text-lg sm:text-xl font-bold text-blue-800 mb-1">Document Checklist</h2>
           {property && (
-            <p className="text-gray-500 text-sm">
-              Property: <span className="font-semibold text-gray-700">{property.title}</span> — {property.location}, {property.district}
+            <p className="text-gray-500 text-xs sm:text-sm">
+              Property: <span className="font-semibold text-gray-700">{property.title}</span> — {property.location}
             </p>
           )}
           {checklist && (
-            <div className="flex gap-3 mt-3 flex-wrap">
-              <span className="bg-green-100 text-green-700 text-xs px-3 py-1 rounded-full font-semibold">✓ {checklist.summary.totalApproved} Approved</span>
-              <span className="bg-yellow-100 text-yellow-700 text-xs px-3 py-1 rounded-full font-semibold">⏳ {checklist.summary.totalPending} Pending</span>
-              <span className="bg-red-100 text-red-700 text-xs px-3 py-1 rounded-full font-semibold">✗ {checklist.summary.totalRejected} Rejected</span>
-              <span className="bg-gray-100 text-gray-500 text-xs px-3 py-1 rounded-full font-semibold">— {checklist.summary.totalMissing} Not Uploaded</span>
+            <div className="flex flex-wrap gap-2 mt-3">
+              <span className="bg-green-100 text-green-700 text-xs px-2 py-1 rounded-full font-semibold">✓ {checklist.summary.totalApproved} Approved</span>
+              <span className="bg-yellow-100 text-yellow-700 text-xs px-2 py-1 rounded-full font-semibold">⏳ {checklist.summary.totalPending} Pending</span>
+              <span className="bg-red-100 text-red-700 text-xs px-2 py-1 rounded-full font-semibold">✗ {checklist.summary.totalRejected} Rejected</span>
+              <span className="bg-gray-100 text-gray-500 text-xs px-2 py-1 rounded-full font-semibold">— {checklist.summary.totalMissing} Not Uploaded</span>
               {checklist.summary.isComplete && (
-                <span className="bg-blue-100 text-blue-700 text-xs px-3 py-1 rounded-full font-semibold">🎉 All Complete</span>
+                <span className="bg-blue-100 text-blue-700 text-xs px-2 py-1 rounded-full font-semibold">🎉 All Complete</span>
               )}
             </div>
           )}
         </div>
 
-        {/* Upload Form — Seller/Agent/Admin/CEO */}
+        {/* Upload Form */}
         {["SELLER", "AGENT", "ADMIN", "CEO"].includes(role) && (
-          <div className="bg-white rounded-lg shadow p-5 mb-6">
-            <h3 className="font-bold text-gray-700 mb-4">Upload Document</h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+          <div className="bg-white rounded-lg shadow p-4 sm:p-5 mb-6">
+            <h3 className="font-bold text-gray-700 mb-4 text-sm sm:text-base">Upload Document</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               <select
                 className="border p-2 rounded text-sm"
                 value={uploadForm.documentType}
@@ -166,7 +162,7 @@ function DocumentChecklist() {
                 ))}
               </select>
               <input
-                className="border p-2 rounded text-sm md:col-span-2"
+                className="border p-2 rounded text-sm sm:col-span-2"
                 placeholder="Document URL (Google Drive link, etc.)"
                 value={uploadForm.fileUrl}
                 onChange={(e) => setUploadForm({ ...uploadForm, fileUrl: e.target.value })}
@@ -175,7 +171,7 @@ function DocumentChecklist() {
             <button
               onClick={handleUpload}
               disabled={uploading}
-              className="mt-3 bg-blue-700 text-white px-6 py-2 rounded text-sm hover:bg-blue-800"
+              className="mt-3 w-full sm:w-auto bg-blue-700 text-white px-6 py-2 rounded text-sm hover:bg-blue-800"
             >
               {uploading ? "Uploading..." : "Upload Document"}
             </button>
@@ -183,28 +179,26 @@ function DocumentChecklist() {
         )}
 
         {/* Checklist Items */}
-        <div className="space-y-4">
+        <div className="space-y-3 sm:space-y-4">
           {checklist?.checklist.map((doc) => (
-            <div key={doc.documentType} className={`bg-white rounded-lg border-2 p-5 ${statusColor(doc.status)}`}>
-              <div className="flex items-start justify-between mb-3">
-                <div>
-                  <h3 className="font-bold text-gray-800">{doc.label}</h3>
+            <div key={doc.documentType} className={`bg-white rounded-lg border-2 p-4 sm:p-5 ${statusColor(doc.status)}`}>
+              <div className="flex items-start justify-between mb-2">
+                <div className="flex-1 mr-2">
+                  <h3 className="font-bold text-gray-800 text-sm sm:text-base">{doc.label}</h3>
                   {doc.uploadedAt && (
-                    <p className="text-xs text-gray-400 mt-1">
-                      Uploaded: {new Date(doc.uploadedAt).toLocaleDateString("en-IN")}
-                    </p>
+                    <p className="text-xs text-gray-400 mt-1">Uploaded: {new Date(doc.uploadedAt).toLocaleDateString("en-IN")}</p>
                   )}
                   {doc.remarks && (
                     <p className="text-xs text-red-600 mt-1">Remarks: {doc.remarks}</p>
                   )}
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex flex-col items-end gap-1 flex-shrink-0">
                   {statusBadge(doc.status)}
                   {doc.fileUrl && (
-  <a href={doc.fileUrl} target="_blank" rel="noreferrer" className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded hover:bg-blue-200">
-    View Doc
-  </a>
-)}
+                    <a href={doc.fileUrl} target="_blank" rel="noreferrer" className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded hover:bg-blue-200">
+                      View Doc
+                    </a>
+                  )}
                 </div>
               </div>
 
@@ -222,7 +216,7 @@ function DocumentChecklist() {
                       <button
                         onClick={() => handleApprove(doc.documentType)}
                         disabled={processing[doc.documentType]}
-                        className="bg-green-600 text-white px-4 py-1 rounded text-sm hover:bg-green-700"
+                        className="flex-1 sm:flex-none bg-green-600 text-white px-4 py-2 rounded text-sm hover:bg-green-700"
                       >
                         {processing[doc.documentType] ? "..." : "✓ Approve"}
                       </button>
@@ -231,7 +225,7 @@ function DocumentChecklist() {
                       <button
                         onClick={() => handleReject(doc.documentType)}
                         disabled={processing[doc.documentType]}
-                        className="bg-red-500 text-white px-4 py-1 rounded text-sm hover:bg-red-600"
+                        className="flex-1 sm:flex-none bg-red-500 text-white px-4 py-2 rounded text-sm hover:bg-red-600"
                       >
                         {processing[doc.documentType] ? "..." : "✗ Reject"}
                       </button>
@@ -249,8 +243,8 @@ function DocumentChecklist() {
 
         {checklist?.summary.isComplete && (
           <div className="mt-6 bg-green-50 border border-green-300 p-4 rounded-lg text-center">
-            <p className="text-green-700 font-bold">🎉 All 5 documents are approved!</p>
-            <p className="text-green-600 text-sm mt-1">This property is ready for Legal Verification.</p>
+            <p className="text-green-700 font-bold text-sm sm:text-base">🎉 All 5 documents are approved!</p>
+            <p className="text-green-600 text-xs sm:text-sm mt-1">This property is ready for Legal Verification.</p>
           </div>
         )}
 

@@ -67,40 +67,39 @@ function Farming() {
     <div className="min-h-screen bg-gray-50">
       <Navbar />
 
-      {/* Hero Banner */}
-      <div className="bg-green-800 text-white px-8 py-8 mb-6">
-        <div className="max-w-6xl mx-auto">
-          <h1 className="text-3xl font-bold mb-2">🌱 Grow What You Eat</h1>
-          <p className="text-green-200 text-sm max-w-xl">
-            Karnataka's premier managed farming project. Own a farm plot, grow organic vegetables,
-            monitor your farm digitally and visit on weekends.
-          </p>
-          <div className="flex gap-6 mt-4 text-sm">
-            <div className="bg-green-700 px-4 py-2 rounded-lg">
-              <p className="text-green-300 text-xs">Total Plots</p>
-              <p className="font-bold text-lg">{plots.length}</p>
-            </div>
-            <div className="bg-green-700 px-4 py-2 rounded-lg">
-              <p className="text-green-300 text-xs">Available</p>
-              <p className="font-bold text-lg">{plots.filter(p => p.status === "AVAILABLE").length}</p>
-            </div>
-            <div className="bg-green-700 px-4 py-2 rounded-lg">
-              <p className="text-green-300 text-xs">Allocated</p>
-              <p className="font-bold text-lg">{plots.filter(p => p.status === "ALLOCATED").length}</p>
-            </div>
-            <div className="bg-green-700 px-4 py-2 rounded-lg">
-              <p className="text-green-300 text-xs">Harvesting</p>
-              <p className="font-bold text-lg">{plots.filter(p => p.status === "HARVESTING").length}</p>
-            </div>
+      {/* Hero Banner — Fixed for mobile */}
+      <div className="bg-green-800 text-white px-4 sm:px-8 py-6 sm:py-8 mb-6">
+        <h1 className="text-2xl sm:text-3xl font-bold mb-2">🌱 Grow What You Eat</h1>
+        <p className="text-green-200 text-xs sm:text-sm max-w-xl mb-4">
+          Karnataka's premier managed farming project. Own a farm plot, grow organic vegetables,
+          monitor your farm digitally and visit on weekends.
+        </p>
+        {/* Stats — 2 columns on mobile, 4 on desktop */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-4">
+          <div className="bg-green-700 px-3 py-2 rounded-lg text-center">
+            <p className="text-green-300 text-xs">Total Plots</p>
+            <p className="font-bold text-lg">{plots.length}</p>
+          </div>
+          <div className="bg-green-700 px-3 py-2 rounded-lg text-center">
+            <p className="text-green-300 text-xs">Available</p>
+            <p className="font-bold text-lg">{plots.filter(p => p.status === "AVAILABLE").length}</p>
+          </div>
+          <div className="bg-green-700 px-3 py-2 rounded-lg text-center">
+            <p className="text-green-300 text-xs">Allocated</p>
+            <p className="font-bold text-lg">{plots.filter(p => p.status === "ALLOCATED").length}</p>
+          </div>
+          <div className="bg-green-700 px-3 py-2 rounded-lg text-center">
+            <p className="text-green-300 text-xs">Harvesting</p>
+            <p className="font-bold text-lg">{plots.filter(p => p.status === "HARVESTING").length}</p>
           </div>
         </div>
       </div>
 
-      <div className="p-6 max-w-6xl mx-auto">
+      <div className="p-4 sm:p-6">
 
-        {/* Add Plot Form */}
+        {/* Add Plot Button */}
         {["CEO", "ADMIN"].includes(role) && (
-          <div className="mb-6 flex justify-end">
+          <div className="mb-4 flex justify-end">
             <button
               onClick={() => setShowForm(!showForm)}
               className="bg-green-600 text-white px-4 py-2 rounded text-sm hover:bg-green-700"
@@ -110,10 +109,11 @@ function Farming() {
           </div>
         )}
 
+        {/* Add Plot Form */}
         {showForm && (
-          <div className="bg-white p-6 rounded-xl shadow mb-6">
+          <div className="bg-white p-4 sm:p-6 rounded-xl shadow mb-6">
             <h3 className="font-bold text-gray-700 mb-4">New Farm Plot</h3>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <input className="border p-2 rounded text-sm" placeholder="Plot Number (e.g. FP-006)" value={form.plotNumber} onChange={(e) => setForm({ ...form, plotNumber: e.target.value })} />
               <input className="border p-2 rounded text-sm" placeholder="Size (e.g. 5000 sqft)" value={form.size} onChange={(e) => setForm({ ...form, size: e.target.value })} />
               <input className="border p-2 rounded text-sm" placeholder="Location" value={form.location} onChange={(e) => setForm({ ...form, location: e.target.value })} />
@@ -130,14 +130,14 @@ function Farming() {
           {!["BUYER"].includes(role) && (
             <button
               onClick={() => setTab("all")}
-              className={`px-5 py-2 rounded-lg text-sm font-semibold border ${tab === "all" ? "bg-green-700 text-white border-green-700" : "bg-white border-gray-200 text-gray-600 hover:bg-gray-50"}`}
+              className={`flex-1 sm:flex-none px-4 py-2 rounded-lg text-sm font-semibold border ${tab === "all" ? "bg-green-700 text-white border-green-700" : "bg-white border-gray-200 text-gray-600"}`}
             >
-              🌍 All Plots ({plots.length})
+              🌍 All ({plots.length})
             </button>
           )}
           <button
             onClick={() => setTab("my")}
-            className={`px-5 py-2 rounded-lg text-sm font-semibold border ${tab === "my" ? "bg-green-700 text-white border-green-700" : "bg-white border-gray-200 text-gray-600 hover:bg-gray-50"}`}
+            className={`flex-1 sm:flex-none px-4 py-2 rounded-lg text-sm font-semibold border ${tab === "my" ? "bg-green-700 text-white border-green-700" : "bg-white border-gray-200 text-gray-600"}`}
           >
             👤 My Plots ({myPlots.length})
           </button>
@@ -151,11 +151,11 @@ function Farming() {
             <p className="text-4xl mb-3">🌱</p>
             <p className="text-gray-400 text-lg font-semibold">No farm plots found</p>
             <p className="text-gray-400 text-sm mt-1">
-              {tab === "my" ? "You don't have any allocated plots yet." : "No plots available at the moment."}
+              {tab === "my" ? "You don't have any allocated plots yet." : "No plots available."}
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {displayPlots.map((plot) => (
               <div key={plot.id} className="bg-white rounded-xl shadow border border-gray-100 overflow-hidden">
 
@@ -164,7 +164,7 @@ function Farming() {
                   <img
                     src={FARM_IMAGES[plot.status] || FARM_IMAGES.AVAILABLE}
                     alt={`Plot ${plot.plotNumber}`}
-                    className="w-full h-40 object-cover"
+                    className="w-full h-36 sm:h-40 object-cover"
                   />
                   <div className="absolute top-2 left-2">
                     <span className={`text-xs px-2 py-1 rounded-full font-semibold border ${statusColor(plot.status)}`}>
@@ -172,13 +172,13 @@ function Farming() {
                     </span>
                   </div>
                   <div className="absolute top-2 right-2 bg-black bg-opacity-50 text-white text-xs px-2 py-1 rounded-full">
-                    Plot #{plot.plotNumber}
+                    #{plot.plotNumber}
                   </div>
                 </div>
 
                 {/* Plot Details */}
-                <div className="p-4">
-                  <div className="grid grid-cols-2 gap-2 mb-3 text-sm">
+                <div className="p-3 sm:p-4">
+                  <div className="grid grid-cols-2 gap-2 mb-3">
                     <div>
                       <p className="text-xs text-gray-400">Location</p>
                       <p className="font-semibold text-gray-700 text-xs">📍 {plot.location}</p>
@@ -202,15 +202,15 @@ function Farming() {
                   </div>
 
                   {/* Dates */}
-                  <div className="flex gap-3 mb-3">
+                  <div className="flex gap-2 mb-3">
                     {plot.nextVisitDate && (
-                      <div className="bg-blue-50 border border-blue-200 rounded-lg px-3 py-2 flex-1 text-center">
+                      <div className="bg-blue-50 border border-blue-200 rounded-lg px-2 py-1 flex-1 text-center">
                         <p className="text-xs text-blue-400">Next Visit</p>
                         <p className="text-xs font-semibold text-blue-700">{new Date(plot.nextVisitDate).toLocaleDateString("en-IN")}</p>
                       </div>
                     )}
                     {plot.harvestDate && (
-                      <div className="bg-yellow-50 border border-yellow-200 rounded-lg px-3 py-2 flex-1 text-center">
+                      <div className="bg-yellow-50 border border-yellow-200 rounded-lg px-2 py-1 flex-1 text-center">
                         <p className="text-xs text-yellow-500">Harvest</p>
                         <p className="text-xs font-semibold text-yellow-700">{new Date(plot.harvestDate).toLocaleDateString("en-IN")}</p>
                       </div>
@@ -219,12 +219,12 @@ function Farming() {
 
                   {/* Crop Updates */}
                   {plot.cropUpdates?.length > 0 && (
-                    <div className="border-t pt-3">
+                    <div className="border-t pt-2">
                       <button
                         onClick={() => setExpandedPlot(expandedPlot === plot.id ? null : plot.id)}
-                        className="text-xs text-green-700 font-semibold hover:underline w-full text-left"
+                        className="text-xs text-green-700 font-semibold w-full text-left"
                       >
-                        🌿 {plot.cropUpdates.length} Crop Update{plot.cropUpdates.length > 1 ? "s" : ""} {expandedPlot === plot.id ? "▲" : "▼"}
+                        🌿 {plot.cropUpdates.length} Update{plot.cropUpdates.length > 1 ? "s" : ""} {expandedPlot === plot.id ? "▲" : "▼"}
                       </button>
                       {expandedPlot === plot.id && (
                         <div className="mt-2 space-y-2">
@@ -235,7 +235,7 @@ function Farming() {
                                 <img
                                   src={u.photoUrl}
                                   alt="crop update"
-                                  className="w-full h-24 object-cover rounded mt-2"
+                                  className="w-full h-20 object-cover rounded mt-1"
                                   onError={(e) => { e.target.style.display = "none" }}
                                 />
                               )}

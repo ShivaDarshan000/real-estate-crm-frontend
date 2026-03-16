@@ -14,21 +14,16 @@ function Login() {
       setError("Email and password are required")
       return
     }
-
     try {
       setLoading(true)
       setError("")
-
       const res = await API.post("/auth/login", { email, password })
-
       localStorage.setItem("token", res.data.token)
       localStorage.setItem("role", res.data.user.role)
       localStorage.setItem("name", res.data.user.name)
       localStorage.setItem("userId", res.data.user.id)
       localStorage.setItem("zone", res.data.user.zone || "")
-
       navigate("/dashboard")
-
     } catch (error) {
       setError(error?.response?.data?.message || "Login failed. Check email or password.")
     } finally {
@@ -37,8 +32,8 @@ function Login() {
   }
 
   return (
-    <div className="h-screen flex items-center justify-center bg-gray-100">
-      <div className="bg-white p-8 rounded-xl shadow-lg w-96">
+    <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
+      <div className="bg-white p-6 sm:p-8 rounded-xl shadow-lg w-full max-w-sm">
         <h2 className="text-2xl font-bold mb-2 text-center text-blue-800">RealEstate CRM</h2>
         <p className="text-center text-gray-500 mb-6 text-sm">Sign in to your account</p>
 
@@ -47,7 +42,7 @@ function Login() {
         )}
 
         <input
-          className="w-full border p-2 mb-4 rounded"
+          className="w-full border p-3 mb-4 rounded text-sm"
           placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
@@ -55,7 +50,7 @@ function Login() {
 
         <input
           type="password"
-          className="w-full border p-2 mb-4 rounded"
+          className="w-full border p-3 mb-4 rounded text-sm"
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
@@ -64,7 +59,7 @@ function Login() {
         <button
           onClick={handleLogin}
           disabled={loading}
-          className="w-full bg-blue-700 text-white p-2 rounded hover:bg-blue-800"
+          className="w-full bg-blue-700 text-white p-3 rounded hover:bg-blue-800 text-sm font-semibold"
         >
           {loading ? "Signing in..." : "Login"}
         </button>
