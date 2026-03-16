@@ -5,7 +5,7 @@ A modern Real Estate CRM platform built with React + Vite + Tailwind CSS. Suppor
 ---
 
 ## 🌐 Live Demo
-[https://real-estate-crm-frontend-1w42yte25-darshans-projects-238b0611.vercel.app]([https://real-estate-crm-frontend-1w42yte25-darshans-projects-238b0611.vercel.app](https://real-estate-crm-frontend-6padnmg4v-darshans-projects-238b0611.vercel.app/))
+[(https://real-estate-crm-frontend-1w42yte25-darshans-projects-238b0611.vercel.app]
 
 ---
 
